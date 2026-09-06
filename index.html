@@ -3,34 +3,37 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Vault Project</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
+<title>Anonymous Vault — Cinematic Brand Film</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root { --bg: #050609; --panel: #0b0d12; --line: rgba(255,255,255,.09); --accent: #9b8cff; --text: #f5f7fa; }
 body { margin:0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; display: grid; place-items: center; min-height: 100vh; }
 .card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 28px; width: min(400px, 90%); text-align: center; }
-.price { font-size: 32px; font-weight: bold; color: var(--accent); margin: 15px 0; }
-a.btn { display: inline-block; padding: 12px 24px; background: var(--accent); color: #000; font-weight: bold; text-decoration: none; border-radius: 8px; margin-top: 10px; }
+.price { font-size: 32px; font-weight: bold; color: var(--accent); margin: 15px 0; font-family: 'DM Mono', monospace; }
+a.btn { display: inline-block; width: 100%; padding: 14px; background: var(--accent); color: #000; font-weight: bold; text-decoration: none; border-radius: 8px; box-sizing: border-box; }
 </style>
 </head>
 <body>
 
 <div class="card">
-  <h2>Project Vault</h2>
+  <h2>Cinematic Brand Film</h2>
   <div class="price" id="display-price">Loading...</div>
-  <a id="download-btn" href="#" class="btn" target="_blank">Download Master File</a>
+  <a id="download-btn" href="#" class="btn" target="_blank">Unlock Master Package</a>
 </div>
 
 <script>
-const FIREBASE_URL = "https://vault-control-default-rtdb.firebaseio.com/data.json";
+const BIN_ID = "66f2a74ae41b4d34e43685e1"; 
+const MASTER_KEY = "$2a$10$wT3yY13vVl0I7c/uG677aO9T2m0O0S1U2K3L4M5N6O7P8Q9R0S1T2";
 
 async function loadData() {
   try {
-    const res = await fetch(FIREBASE_URL);
+    const res = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+      headers: { "X-Master-Key": MASTER_KEY }
+    });
     const data = await res.json();
-    if(data) {
-      document.getElementById("display-price").innerText = "₹" + data.price;
-      document.getElementById("download-btn").href = data.master_url;
+    if(data.record) {
+      document.getElementById("display-price").innerText = "₹" + Number(data.record.price).toLocaleString('en-IN');
+      document.getElementById("download-btn").href = data.record.master_url;
     }
   } catch(e) {
     document.getElementById("display-price").innerText = "Error loading";
