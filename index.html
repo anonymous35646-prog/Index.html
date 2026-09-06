@@ -146,7 +146,6 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Exact Supabase URL & Public Anon Key
 const SUPABASE_URL = "https://tqyczcqpjyektrzgnwh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeWN6cWNwanlla3RyanpnbndoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2ODYwMjUsImV4cCI6MjEwNDI2MjAyNX0.hj5DLNad4ERCP2F5L5OWj1wcSRIOr7pmW-aAEIiqKng";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -154,10 +153,10 @@ const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 let currentMasterUrl = "";
 
 async function fetchDynamicData() {
-  const { data, error } = await db.from('projects').select('*').eq('id', 1).single();
-  if(data) {
-    document.getElementById('project-price-display').innerText = '₹' + Number(data.price).toLocaleString('en-IN');
-    currentMasterUrl = data.master_url;
+  const { data, error } = await db.from('projects').select('*').limit(1);
+  if(data && data.length > 0) {
+    document.getElementById('project-price-display').innerText = '₹' + Number(data[0].price).toLocaleString('en-IN');
+    currentMasterUrl = data[0].master_url;
   } else {
     document.getElementById('project-price-display').innerText = '₹2,500';
   }
@@ -165,8 +164,8 @@ async function fetchDynamicData() {
 fetchDynamicData();
 
 function purchase() {
-  if(!currentMasterUrl || currentMasterUrl === 'https://drive.google.com') {
-    alert("Master file link is not configured properly in Admin Panel.");
+  if(!currentMasterUrl) {
+    alert("Link is updating...");
     return;
   }
   window.open(currentMasterUrl, '_blank');
