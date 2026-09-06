@@ -42,11 +42,11 @@ button { width: 100%; padding: 12px; background: var(--accent); border: 0; borde
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+// Exact Supabase URL & Public Anon Key
 const SUPABASE_URL = "https://tqyczcqpjyektrzgnwh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeWN6cWNwanlla3RyanpnbndoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2ODYwMjUsImV4cCI6MjEwNDI2MjAyNX0.hj5DLNad4ERCP2F5L5OWj1wcSRIOr7pmW-aAEIiqKng";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-// Passcode: 123456
 const ADMIN_PASSCODE = "123456"; 
 
 function login() {
