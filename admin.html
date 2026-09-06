@@ -18,7 +18,6 @@ button { width: 100%; padding: 12px; background: var(--accent); border: 0; borde
 </head>
 <body>
 
-<!-- Login Modal -->
 <div class="card" id="login-card">
   <h2>Admin Verification</h2>
   <label>Admin Passcode</label>
@@ -26,7 +25,6 @@ button { width: 100%; padding: 12px; background: var(--accent); border: 0; borde
   <button onclick="login()">Access Panel</button>
 </div>
 
-<!-- Control Center -->
 <div class="card" id="admin-panel">
   <h2>Vault Control</h2>
   
@@ -42,14 +40,29 @@ button { width: 100%; padding: 12px; background: var(--accent); border: 0; borde
 
 <script>
 const ADMIN_PASSCODE = "123456"; 
+const API_KEY = "$2a$10$wT3yY13vVl0I7c/uG677aO9T2m0O0S1U2K3L4M5N6O7P8Q9R0S1T2";
 
 function login() {
   const pass = document.getElementById("passcode").value;
   if(pass === ADMIN_PASSCODE) {
     document.getElementById("login-card").style.display = "none";
     document.getElementById("admin-panel").style.display = "block";
+    loadCurrentData();
   } else {
     alert("Incorrect Passcode!");
+  }
+}
+
+async function loadCurrentData() {
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/66f2a74ae41b4d34e43685e1/latest`);
+    const data = await res.json();
+    if(data.record) {
+      document.getElementById("project-price").value = data.record.price;
+      document.getElementById("master-url").value = data.record.master_url;
+    }
+  } catch(e) {
+    console.log(e);
   }
 }
 
@@ -60,23 +73,23 @@ async function saveChanges() {
   document.getElementById("status").innerText = "Updating...";
 
   try {
-    const res = await fetch("/api/update", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ price: newPrice, master_url: newUrl })
+    const res = await fetch(`https://api.jsonbin.io/v3/b/66f2a74ae41b4d34e43685e1`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ price: Number(newPrice), master_url: newUrl })
     });
 
-    const data = await res.json();
-
-    if(res.ok && data.success) {
+    if(res.ok) {
       document.getElementById("status").innerText = "Updated successfully!";
       setTimeout(() => document.getElementById("status").innerText = "", 3000);
     } else {
-      alert("Error updating data: " + JSON.stringify(data));
+      alert("Failed to update");
       document.getElementById("status").innerText = "";
     }
   } catch(e) {
-    alert("Network Error: " + e.message);
+    alert("Error: " + e.message);
     document.getElementById("status").innerText = "";
   }
 }
