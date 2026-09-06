@@ -22,15 +22,15 @@ a.btn { display: inline-block; padding: 12px 24px; background: var(--accent); co
 </div>
 
 <script>
-const BIN_ID = "66f2a74ae41b4d34e43685e1"; 
+const FIREBASE_URL = "https://vault-control-default-rtdb.firebaseio.com/data.json";
 
 async function loadData() {
   try {
-    const res = await fetch(`https://api.jsonbin.io/v3/b/66f2a74ae41b4d34e43685e1/latest`);
+    const res = await fetch(FIREBASE_URL);
     const data = await res.json();
-    if(data.record) {
-      document.getElementById("display-price").innerText = "₹" + data.record.price;
-      document.getElementById("download-btn").href = data.record.master_url;
+    if(data) {
+      document.getElementById("display-price").innerText = "₹" + data.price;
+      document.getElementById("download-btn").href = data.master_url;
     }
   } catch(e) {
     document.getElementById("display-price").innerText = "Error loading";
