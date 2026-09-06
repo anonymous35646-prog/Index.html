@@ -31,13 +31,6 @@ body {
   overflow-x: hidden;
 }
 
-#canvas-container {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-}
-
 .vault-card {
   position: relative;
   z-index: 1;
@@ -48,7 +41,6 @@ body {
   max-width: 480px;
   width: 100%;
   box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-  backdrop-filter: blur(10px);
 }
 
 .brand-header {
@@ -135,8 +127,6 @@ body {
 </head>
 <body>
 
-<div id="canvas-container"></div>
-
 <div class="vault-card">
   <div class="brand-header">
     <div class="brand-icon"></div>
@@ -156,14 +146,13 @@ body {
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Supabase Database Connection
-const SUPABASE_URL = "https://tqyczcqpjycztrgnwh.supabase.co";
+// Exact Supabase URL & Public Anon Key
+const SUPABASE_URL = "https://tqyczcqpjyektrzgnwh.supabase.co";
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeWN6cWNwanlla3RyanpnbndoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2ODYwMjUsImV4cCI6MjEwNDI2MjAyNX0.hj5DLNad4ERCP2F5L5OWj1wcSRIOr7pmW-aAEIiqKng";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let currentMasterUrl = "";
 
-// Database se Price & Link Fetch karne ka Function
 async function fetchDynamicData() {
   const { data, error } = await db.from('projects').select('*').eq('id', 1).single();
   if(data) {
@@ -175,13 +164,11 @@ async function fetchDynamicData() {
 }
 fetchDynamicData();
 
-// Payment / Unlock Trigger
 function purchase() {
-  if(!currentMasterUrl || currentMasterUrl === 'https://your-video-link.com') {
-    alert("Master file is ready! Please proceed with payment or access via Admin Panel.");
+  if(!currentMasterUrl || currentMasterUrl === 'https://drive.google.com') {
+    alert("Master file link is not configured properly in Admin Panel.");
     return;
   }
-  // Automatic Unlock Action
   window.open(currentMasterUrl, '_blank');
 }
 </script>
