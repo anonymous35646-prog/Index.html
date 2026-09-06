@@ -3,173 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anonymous Vault — Cinematic Brand Film</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<title>Vault Project</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg: #050609;
-  --panel: #0b0d12;
-  --panel-border: rgba(255, 255, 255, 0.08);
-  --accent: #9b8cff;
-  --accent-glow: rgba(155, 140, 255, 0.15);
-  --text-primary: #f5f7fa;
-  --text-secondary: #7c8493;
-}
-
-* { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background-color: var(--bg);
-  color: var(--text-primary);
-  font-family: 'Manrope', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 24px;
-  overflow-x: hidden;
-}
-
-.vault-card {
-  position: relative;
-  z-index: 1;
-  background: var(--panel);
-  border: 1px solid var(--panel-border);
-  border-radius: 24px;
-  padding: 40px;
-  max-width: 480px;
-  width: 100%;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-}
-
-.brand-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.brand-icon {
-  width: 12px;
-  height: 12px;
-  background: var(--accent);
-  border-radius: 50%;
-  box-shadow: 0 0 12px var(--accent);
-}
-
-.brand-name {
-  font-family: 'DM Mono', monospace;
-  font-size: 12px;
-  letter-spacing: 0.15em;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.title {
-  font-size: 28px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.description {
-  color: var(--text-secondary);
-  font-size: 14px;
-  line-height: 1.6;
-  margin-bottom: 28px;
-}
-
-.price-container {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--panel-border);
-  border-radius: 16px;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 28px;
-}
-
-.price-label {
-  font-size: 12px;
-  font-family: 'DM Mono', monospace;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-}
-
-.price {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--accent);
-  font-family: 'DM Mono', monospace;
-}
-
-.btn-purchase {
-  width: 100%;
-  padding: 16px;
-  background: var(--accent);
-  color: #000;
-  border: none;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 0 20px var(--accent-glow);
-}
-
-.btn-purchase:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 30px var(--accent-glow);
-}
+:root { --bg: #050609; --panel: #0b0d12; --line: rgba(255,255,255,.09); --accent: #9b8cff; --text: #f5f7fa; }
+body { margin:0; background: var(--bg); color: var(--text); font-family: 'Manrope', sans-serif; display: grid; place-items: center; min-height: 100vh; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 28px; width: min(400px, 90%); text-align: center; }
+.price { font-size: 32px; font-weight: bold; color: var(--accent); margin: 15px 0; }
+a.btn { display: inline-block; padding: 12px 24px; background: var(--accent); color: #000; font-weight: bold; text-decoration: none; border-radius: 8px; margin-top: 10px; }
 </style>
 </head>
 <body>
 
-<div class="vault-card">
-  <div class="brand-header">
-    <div class="brand-icon"></div>
-    <span class="brand-name">Anonymous Vault</span>
-  </div>
-
-  <h1 class="title">Cinematic Brand Film</h1>
-  <p class="description">Master delivery package containing full high-resolution video export, source project files, and commercial usage licensing.</p>
-
-  <div class="price-container">
-    <span class="price-label">Unlock Price</span>
-    <span class="price" id="project-price-display">Fetching...</span>
-  </div>
-
-  <button class="btn-purchase" onclick="purchase()">Purchase & Unlock Master</button>
+<div class="card">
+  <h2>Project Vault</h2>
+  <div class="price" id="display-price">Loading...</div>
+  <a id="download-btn" href="#" class="btn" target="_blank">Download Master File</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const SUPABASE_URL = "https://tqyczcqpjyektrzgnwh.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeWN6cWNwanlla3RyanpnbndoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg2ODYwMjUsImV4cCI6MjEwNDI2MjAyNX0.hj5DLNad4ERCP2F5L5OWj1wcSRIOr7pmW-aAEIiqKng";
-const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const BIN_ID = "66f2a74ae41b4d34e43685e1"; 
 
-let currentMasterUrl = "";
-
-async function fetchDynamicData() {
-  const { data, error } = await db.from('projects').select('*').limit(1);
-  if(data && data.length > 0) {
-    document.getElementById('project-price-display').innerText = '₹' + Number(data[0].price).toLocaleString('en-IN');
-    currentMasterUrl = data[0].master_url;
-  } else {
-    document.getElementById('project-price-display').innerText = '₹2,500';
+async function loadData() {
+  try {
+    const res = await fetch(`https://api.jsonbin.io/v3/b/66f2a74ae41b4d34e43685e1/latest`);
+    const data = await res.json();
+    if(data.record) {
+      document.getElementById("display-price").innerText = "₹" + data.record.price;
+      document.getElementById("download-btn").href = data.record.master_url;
+    }
+  } catch(e) {
+    document.getElementById("display-price").innerText = "Error loading";
   }
 }
-fetchDynamicData();
-
-function purchase() {
-  if(!currentMasterUrl) {
-    alert("Link is updating...");
-    return;
-  }
-  window.open(currentMasterUrl, '_blank');
-}
+loadData();
 </script>
 </body>
 </html>
