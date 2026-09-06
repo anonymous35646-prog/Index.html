@@ -41,9 +41,6 @@ button { width: 100%; padding: 12px; background: var(--accent); border: 0; borde
 </div>
 
 <script>
-const SUPABASE_URL = "https://tqyczcqpjyektrzgnwh.supabase.co";
-const SERVICE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRxeWN6cWNwanlla3RyanpnbndoIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc4ODY4NjAyNSwiZXhwIjoyMTA0MjYyMDI1fQ.2cS8CjQkkFRRqyJSITmRTnBHH3xB4aW9k0IUTpZd7eI";
-
 const ADMIN_PASSCODE = "123456"; 
 
 function login() {
@@ -51,27 +48,8 @@ function login() {
   if(pass === ADMIN_PASSCODE) {
     document.getElementById("login-card").style.display = "none";
     document.getElementById("admin-panel").style.display = "block";
-    loadCurrentData();
   } else {
     alert("Incorrect Passcode!");
-  }
-}
-
-async function loadCurrentData() {
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/projects?select=*`, {
-      headers: {
-        "apikey": SERVICE_KEY,
-        "Authorization": `Bearer ${SERVICE_KEY}`
-      }
-    });
-    const data = await res.json();
-    if(data && data.length > 0) {
-      document.getElementById("project-price").value = data[0].price;
-      document.getElementById("master-url").value = data[0].master_url;
-    }
-  } catch(e) {
-    console.log(e);
   }
 }
 
@@ -79,27 +57,27 @@ async function saveChanges() {
   const newPrice = document.getElementById("project-price").value;
   const newUrl = document.getElementById("master-url").value;
 
+  document.getElementById("status").innerText = "Updating...";
+
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/projects?id=eq.1`, {
-      method: "PATCH",
-      headers: {
-        "apikey": SERVICE_KEY,
-        "Authorization": `Bearer ${SERVICE_KEY}`,
-        "Content-Type": "application/json",
-        "Prefer": "return=minimal"
-      },
-      body: JSON.stringify({ price: Number(newPrice), master_url: newUrl })
+    const res = await fetch("/api/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ price: newPrice, master_url: newUrl })
     });
 
-    if(res.ok) {
+    const data = await res.json();
+
+    if(res.ok && data.success) {
       document.getElementById("status").innerText = "Updated successfully!";
       setTimeout(() => document.getElementById("status").innerText = "", 3000);
     } else {
-      const err = await res.json();
-      alert("Error: " + JSON.stringify(err));
+      alert("Error updating data: " + JSON.stringify(data));
+      document.getElementById("status").innerText = "";
     }
   } catch(e) {
-    alert("Connection Error: " + e.message);
+    alert("Network Error: " + e.message);
+    document.getElementById("status").innerText = "";
   }
 }
 </script>
